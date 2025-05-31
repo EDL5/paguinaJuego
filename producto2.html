@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket to Ride - Juegos de Mesa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #fbf8f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        ul {
+            list-style: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #ee941c;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #e74138;
+            transform: translateY(-2px);
+        }
+        
+        /* Header */
+        header {
+            background-color: #e74138;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 50px;
+            height: 50px;
+        }
+        
+        nav ul {
+            display: flex;
+            gap: 20px;
+        }
+        
+        nav ul li a {
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background-color: #ee941c;
+        }
+        
+        /* Main content */
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .producto-info {
+            display: flex;
+            gap: 3rem;
+            margin-bottom: 3rem;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .producto-imagen {
+            flex: 1;
+        }
+        
+        .producto-imagen img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .producto-datos {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .producto-datos h2 {
+            font-size: 2rem;
+            color: #e74138;
+        }
+        
+        .precio {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ee941c;
+        }
+        
+        .rating {
+            color: #f2b565;
+        }
+        
+        .rating span {
+            color: #666;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+        
+        .detalles-rapidos {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .detalles-rapidos p {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #555;
+        }
+        
+        .detalles-rapidos i {
+            color: #e74138;
+        }
+        
+        /* Descripción del producto */
+        .producto-descripcion {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .producto-descripcion h3 {
+            color: #e74138;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .producto-descripcion p {
+            margin-bottom: 1rem;
+        }
+        
+        .producto-descripcion ul {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .producto-descripcion li {
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+        
+        .producto-descripcion li::before {
+            content: "•";
+            color: #ee941c;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+        
+        .producto-descripcion strong {
+            color: #e74138;
+        }
+        
+        /* Productos relacionados */
+        .producto-relacionados h3 {
+            color: #e74138;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+        
+        .productos-container {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .producto {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            flex: 1;
+            cursor: pointer;
+        }
+        
+        .producto:hover {
+            transform: translateY(-5px);
+        }
+        
+        .producto img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .producto h4 {
+            padding: 1rem 1rem 0;
+            color: #e74138;
+        }
+        
+        .producto .precio {
+            padding: 0.5rem 1rem;
+            color: #ee941c;
+            font-size: 1.2rem;
+        }
+        
+        .producto .btn {
+            margin: 1rem;
+            width: calc(100% - 2rem);
+            text-align: center;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #e74138;
+            color: white;
+            padding: 2rem 0 0;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+        
+        .footer-section {
+            flex: 1;
+            padding: 0 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: #f6d6af;
+        }
+        
+        .footer-section p {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .footer-section i {
+            margin-right: 8px;
+            color: #f6d6af;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-icons a {
+            color: white;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+        
+        .social-icons a:hover {
+            color: #f6d6af;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding: 1rem;
+            background-color: #c53129;
+            font-size: 0.8rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .logo-container {
+                margin-bottom: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .producto-info {
+                flex-direction: column;
+            }
+            
+            .productos-container {
+                flex-direction: column;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <link rel="icon" href="https://i.postimg.cc/yNBrysvX/logojuegos.png">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="https://i.postimg.cc/yNBrysvX/logojuegos.png" alt="Logo Juegos de Mesa" class="logo">
+            <h1>Juegos de Mesa</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html#inicio">Inicio</a></li>
+                <li><a href="index.html#catalogo">Catálogo</a></li>
+                <li><a href="index.html#contacto">Contacto</a></li>
+                <li><a href="index.html#comunidad">Comunidad</a></li>
+                <li><a href="ajedrez.html">Jugar Ajedrez</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="producto-detalle">
+        <section class="producto-info">
+            <div class="producto-imagen">
+                <img src="https://images.unsplash.com/photo-1608889825103-eb5ad3f97d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Ticket to Ride">
+            </div>
+            <div class="producto-datos">
+                <h2>Ticket to Ride</h2>
+                <p class="precio">$44.99</p>
+                <div class="rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <span>(95 reseñas)</span>
+                </div>
+                <button class="btn">Añadir al Carrito</button>
+                <div class="detalles-rapidos">
+                    <p><i class="fas fa-users"></i> 2-5 jugadores</p>
+                    <p><i class="fas fa-clock"></i> 30-60 minutos</p>
+                    <p><i class="fas fa-birthday-cake"></i> 8+ años</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="producto-descripcion">
+            <h3>Descripción del Producto</h3>
+            <p>Ticket to Ride es un emocionante juego de trenes en el que los jugadores recolectan cartas de varios tipos de vagones que les permiten reclamar rutas ferroviarias que conectan ciudades a lo largo de Norteamérica.</p>
+            <p>Cuanto más largas sean las rutas, más puntos ganarás. Los puntos adicionales van a los jugadores que cumplan sus Tickets de Destino conectando las ciudades distantes mostradas, y al jugador que construya el ferrocarril continuo más largo.</p>
+            
+            <h3>Características</h3>
+            <ul>
+                <li>Juego familiar estratégico para 2-5 jugadores</li>
+                <li>Duración aproximada: 30-60 minutos</li>
+                <li>Incluye: 1 tablero mapa de Norteamérica, 225 vagones de colores, 144 cartas de tren</li>
+                <li>30 tickets de destino, 5 marcadores de puntuación de madera, 1 reglamento</li>
+                <li>Ganador del premio Spiel des Jahres</li>
+            </ul>
+            
+            <h3>Modos de Juego</h3>
+            <p>Ticket to Ride ofrece diferentes estrategias según el número de jugadores:</p>
+            <ul>
+                <li><strong>2 jugadores:</strong> Más estratégico con bloqueos posibles</li>
+                <li><strong>3-4 jugadores:</strong> Equilibrio perfecto entre estrategia y azar</li>
+                <li><strong>5 jugadores:</strong> Más caótico y divertido</li>
+            </ul>
+        </section>
+
+        <section class="producto-relacionados">
+            <h3>Productos Relacionados</h3>
+            <div class="productos-container">
+                <div class="producto" onclick="window.location.href='producto1.html'">
+                    <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Catan">
+                    <h4>Catan</h4>
+                    <p class="precio">$49.99</p>
+                    <button class="btn">Ver Detalles</button>
+                </div>
+                <div class="producto" onclick="window.location.href='producto3.html'">
+                    <img src="https://images.unsplash.com/photo-1608889825271-9696287ab3d1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Carcassonne">
+                    <h4>Carcassonne</h4>
+                    <p class="precio">$39.99</p>
+                    <button class="btn">Ver Detalles</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Sobre Nosotros</h3>
+                <p>Tienda especializada en juegos de mesa desde 2010. Nuestra pasión es llevar diversión a cada hogar.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contacto</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Calle Juego 123, Ciudad</p>
+                <p><i class="fas fa-phone"></i> +123 456 7890</p>
+                <p><i class="fas fa-envelope"></i> info@juegosdemesa.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Redes Sociales</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Juegos de Mesa. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelector('.btn').addEventListener('click', function() {
+            alert('Ticket to Ride añadido al carrito');
+        });
+        
+        // Añadir evento a todos los botones
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const productName = this.closest('.producto') ? 
+                    this.closest('.producto').querySelector('h4').textContent : 
+                    'Ticket to Ride';
+                alert(`${productName} añadido al carrito`);
+            });
+        });
+    </script>
+</body>
+</html>

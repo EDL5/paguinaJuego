@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos de Mesa - Diversión para Todos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="https://i.postimg.cc/yNBrysvX/logojuegos.png">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="https://i.postimg.cc/yNBrysvX/logojuegos.png" alt="Logo Juegos de Mesa" class="logo">
+            <h1>Juegos de Mesa</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#catalogo">Catálogo</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+                <li><a href="#comunidad">Comunidad</a></li>
+                <li><a href="ajedrez.html">Jugar Ajedrez</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="inicio" class="hero">
+            <div class="hero-content">
+                <h2>Diversión sobre la mesa</h2>
+                <p>Descubre los mejores juegos de mesa para compartir con familia y amigos</p>
+                <a href="#catalogo" class="btn">Ver Catálogo</a>
+            </div>
+        </section>
+
+        <section class="ventajas">
+            <h2>¿Por qué elegirnos?</h2>
+            <div class="ventajas-container">
+                <div class="ventaja">
+                    <i class="fas fa-shipping-fast"></i>
+                    <h3>Envío Rápido</h3>
+                    <p>Recibe tus juegos en 24-48 horas en toda la ciudad</p>
+                </div>
+                <div class="ventaja">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <h3>Precios Competitivos</h3>
+                    <p>Las mejores marcas al mejor precio del mercado</p>
+                </div>
+                <div class="ventaja">
+                    <i class="fas fa-headset"></i>
+                    <h3>Soporte 24/7</h3>
+                    <p>Nuestro equipo está siempre disponible para ayudarte</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="catalogo" class="catalogo">
+            <h2>Nuestros Juegos Destacados</h2>
+            <div class="productos-container">
+                <div class="producto" onclick="window.location.href='producto1.html'">
+                    <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Catan">
+                    <h3>Catan</h3>
+                    <p class="precio">$49.99</p>
+                    <p class="descripcion">El clásico juego de estrategia y comercio donde colonizas la isla de Catan.</p>
+                    <button class="btn">Ver Detalles</button>
+                </div>
+                <div class="producto" onclick="window.location.href='producto2.html'">
+                    <img src="https://images.unsplash.com/photo-1608889825103-eb5ad3f97d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Ticket to Ride">
+                    <h3>Ticket to Ride</h3>
+                    <p class="precio">$44.99</p>
+                    <p class="descripcion">Construye rutas ferroviarias a través de Norteamérica en este emocionante juego.</p>
+                    <button class="btn">Ver Detalles</button>
+                </div>
+                <div class="producto" onclick="window.location.href='producto3.html'">
+                    <img src="https://images.unsplash.com/photo-1608889825271-9696287ab3d1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Carcassonne">
+                    <h3>Carcassonne</h3>
+                    <p class="precio">$39.99</p>
+                    <p class="descripcion">Construye ciudades, caminos y monasterios en este juego de colocación de losetas.</p>
+                    <button class="btn">Ver Detalles</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="contacto" class="contacto">
+            <h2>Contáctanos</h2>
+            <form id="form-contacto">
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="asunto">Asunto:</label>
+                    <input type="text" id="asunto" name="asunto" required>
+                </div>
+                <div class="form-group">
+                    <label for="mensaje">Mensaje:</label>
+                    <textarea id="mensaje" name="mensaje" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn">Enviar Mensaje</button>
+            </form>
+        </section>
+
+        <section id="comunidad" class="comunidad">
+            <h2>Únete a Nuestra Comunidad</h2>
+            <div class="comunidad-content">
+                <div class="beneficios">
+                    <h3>Beneficios de ser parte de nuestra comunidad:</h3>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Descuentos exclusivos para miembros</li>
+                        <li><i class="fas fa-check-circle"></i> Acceso anticipado a nuevos lanzamientos</li>
+                        <li><i class="fas fa-check-circle"></i> Invitaciones a eventos y torneos</li>
+                        <li><i class="fas fa-check-circle"></i> Programa de recompensas por compras</li>
+                    </ul>
+                </div>
+                <div class="registro">
+                    <h3>Regístrate ahora</h3>
+                    <form id="form-comunidad">
+                        <div class="form-group">
+                            <label for="nombre-comunidad">Nombre:</label>
+                            <input type="text" id="nombre-comunidad" name="nombre-comunidad" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email-comunidad">Email:</label>
+                            <input type="email" id="email-comunidad" name="email-comunidad" required>
+                        </div>
+                        <button type="submit" class="btn">Unirse</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Sobre Nosotros</h3>
+                <p>Tienda especializada en juegos de mesa desde 2010. Nuestra pasión es llevar diversión a cada hogar.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contacto</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Calle Juego 123, Ciudad</p>
+                <p><i class="fas fa-phone"></i> +123 456 7890</p>
+                <p><i class="fas fa-envelope"></i> info@juegosdemesa.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Redes Sociales</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Juegos de Mesa. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simulación de envío de formularios
+        document.getElementById('form-contacto').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Gracias por tu mensaje. Nos pondremos en contacto contigo pronto.');
+            this.reset();
+        });
+
+        document.getElementById('form-comunidad').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('¡Bienvenido a nuestra comunidad! Pronto recibirás un email con más información.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

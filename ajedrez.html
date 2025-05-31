@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Ajedrez - Juegos de Mesa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fbf8f9;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        header {
+            background-color: #e74138;
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            height: 50px;
+            margin-right: 15px;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+            text-align: center;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-wrap: wrap;
+        }
+        
+        nav li {
+            margin: 5px 15px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            display: inline-block;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Contenedor principal */
+        .chess-container {
+            max-width: 800px;
+            width: 95%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(231, 65, 56, 0.1);
+            border: 1px solid #ee941c;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chess-container h2 {
+            color: #e74138;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        
+        /* Tablero de ajedrez - Estilo mejorado */
+        .chess-board-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 0 auto;
+            padding: 10px 0;
+        }
+        
+        .chess-board {
+            width: 100%;
+            max-width: 600px;
+            max-height: 600px;
+            margin: 0 auto;
+            aspect-ratio: 1/1;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            border: 3px solid #e74138;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            background-color: #e74138;
+            border-collapse: collapse;
+        }
+        
+        .chess-square {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: min(5vw, 2.5rem);
+            cursor: pointer;
+            transition: background-color 0.2s;
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            min-height: 40px;
+            min-width: 40px;
+        }
+        
+        .light {
+            background-color: #f6d6af;
+        }
+        
+        .dark {
+            background-color: #f2b565;
+        }
+        
+        /* Controles */
+        .chess-controls {
+            margin-top: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .btn {
+            background-color: #ee941c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            min-width: 150px;
+        }
+        
+        .btn:hover {
+            background-color: #e74138;
+            transform: translateY(-2px);
+        }
+        
+        /* Información */
+        .chess-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fbf8f9;
+            border-radius: 8px;
+            border-left: 4px solid #e74138;
+        }
+        
+        .chess-info h3 {
+            color: #e74138;
+            margin-top: 0;
+            font-size: 1.2rem;
+        }
+        
+        .chess-info p {
+            margin: 8px 0;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+        
+        .status-message {
+            text-align: center;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #e74138;
+            min-height: 24px;
+            font-size: 1.1rem;
+        }
+        
+        /* Estados */
+        .selected {
+            box-shadow: inset 0 0 0 3px #e74138;
+            z-index: 2;
+        }
+        
+        .possible-move {
+            background-color: rgba(238, 148, 28, 0.5);
+            position: relative;
+        }
+        
+        .possible-move::after {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            background-color: rgba(238, 148, 28, 0.8);
+            border-radius: 50%;
+        }
+        
+        .possible-capture {
+            background-color: rgba(231, 65, 56, 0.3);
+            position: relative;
+        }
+        
+        .possible-capture::after {
+            content: '';
+            position: absolute;
+            width: 70%;
+            height: 70%;
+            border: 2px solid #e74138;
+            border-radius: 50%;
+            box-sizing: border-box;
+        }
+        
+        .check {
+            box-shadow: inset 0 0 0 3px #ff0000;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: inset 0 0 0 3px #ff0000; }
+            50% { box-shadow: inset 0 0 0 5px #ff0000; }
+            100% { box-shadow: inset 0 0 0 3px #ff0000; }
+        }
+        
+        /* Modal de promoción */
+        .promotion-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .promotion-options {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 300px;
+        }
+        
+        .promotion-option {
+            font-size: 2.5rem;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+            transition: all 0.2s;
+            flex: 0 0 calc(50% - 15px);
+            text-align: center;
+        }
+        
+        .promotion-option:hover {
+            background-color: #f6d6af;
+            transform: scale(1.1);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #e74138;
+            color: white;
+            padding: 20px 0 10px;
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin: 0 10px 20px;
+        }
+        
+        .footer-section h3 {
+            border-bottom: 2px solid #f2b565;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+        
+        .footer-section p {
+            margin: 8px 0;
+            font-size: 0.9rem;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .social-icons a {
+            color: white;
+            font-size: 1.3rem;
+            transition: color 0.3s;
+        }
+        
+        .social-icons a:hover {
+            color: #f6d6af;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 15px;
+            font-size: 0.8rem;
+        }
+        
+        /* Coordenadas del tablero */
+        .coordinate {
+            position: absolute;
+            font-size: 0.7rem;
+            color: rgba(0, 0, 0, 0.7);
+            pointer-events: none;
+            font-weight: bold;
+        }
+        
+        .file {
+            bottom: 2px;
+            right: 4px;
+        }
+        
+        .rank {
+            top: 2px;
+            left: 4px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: row;
+                justify-content: center;
+            }
+            
+            nav li {
+                margin: 5px 8px;
+            }
+            
+            .chess-container {
+                margin: 15px auto;
+                padding: 15px;
+            }
+            
+            .chess-square {
+                font-size: min(6vw, 2rem);
+            }
+            
+            .btn {
+                padding: 8px 15px;
+                min-width: 120px;
+            }
+            
+            .promotion-options {
+                max-width: 250px;
+            }
+            
+            .promotion-option {
+                font-size: 2rem;
+                flex: 0 0 calc(50% - 10px);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .chess-container h2 {
+                font-size: 1.5rem;
+            }
+            
+            .chess-square {
+                font-size: min(7vw, 1.8rem);
+            }
+            
+            .coordinate {
+                font-size: 0.6rem;
+            }
+            
+            .btn {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+                min-width: 100px;
+            }
+        }
+    </style>
+    <link rel="icon" href="https://i.postimg.cc/yNBrysvX/logojuegos.png">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="https://i.postimg.cc/yNBrysvX/logojuegos.png" alt="Logo Juegos de Mesa" class="logo">
+            <h1>Juegos de Mesa</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html#inicio">Inicio</a></li>
+                <li><a href="index.html#catalogo">Catálogo</a></li>
+                <li><a href="index.html#contacto">Contacto</a></li>
+                <li><a href="index.html#comunidad">Comunidad</a></li>
+                <li><a href="ajedrez.html">Jugar Ajedrez</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="chess-container">
+            <h2>Juego de Ajedrez</h2>
+            <div class="status-message" id="statusMessage">Turno de las blancas</div>
+            <div class="chess-board" id="chessBoard"></div>
+            <div class="chess-controls">
+                <button id="resetBtn" class="btn">Reiniciar Juego</button>
+                <button id="flipBtn" class="btn">Voltear Tablero</button>
+            </div>
+            <div class="chess-info">
+                <h3>Instrucciones:</h3>
+                <p>1. Haz clic en una pieza para seleccionarla.</p>
+                <p>2. Las casillas naranjas muestran los movimientos posibles.</p>
+                <p>3. Los círculos rojos indican capturas posibles.</p>
+                <p>4. Haz clic en una casilla marcada para mover la pieza.</p>
+                <p>5. Las blancas mueven primero.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de promoción -->
+    <div class="promotion-modal" id="promotionModal">
+        <div class="promotion-options">
+            <div class="promotion-option" data-piece="q">♕</div>
+            <div class="promotion-option" data-piece="r">♖</div>
+            <div class="promotion-option" data-piece="b">♗</div>
+            <div class="promotion-option" data-piece="n">♘</div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Sobre Nosotros</h3>
+                <p>Tienda especializada en juegos de mesa desde 2010. Nuestra pasión es llevar diversión a cada hogar.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contacto</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Calle Juego 123, Ciudad</p>
+                <p><i class="fas fa-phone"></i> +123 456 7890</p>
+                <p><i class="fas fa-envelope"></i> info@juegosdemesa.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Redes Sociales</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Juegos de Mesa. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const board = document.getElementById('chessBoard');
+            const resetBtn = document.getElementById('resetBtn');
+            const flipBtn = document.getElementById('flipBtn');
+            const statusMessage = document.getElementById('statusMessage');
+            const promotionModal = document.getElementById('promotionModal');
+            const promotionOptions = document.querySelectorAll('.promotion-option');
+            
+            let selectedPiece = null;
+            let currentPlayer = 'white';
+            let boardFlipped = false;
+            let enPassantTarget = null;
+            let castlingRights = { white: { kingside: true, queenside: true }, black: { kingside: true, queenside: true } };
+            let halfMoveClock = 0;
+            let fullMoveNumber = 1;
+            let promotionPending = null;
+            
+            // Piezas de ajedrez en notación FEN (posición inicial)
+            const initialPosition = [
+                ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+                ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+                ['', '', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', '', ''],
+                ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+                ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+            ];
+            
+            let boardState = JSON.parse(JSON.stringify(initialPosition));
+            
+            // Mapeo de piezas a emojis
+            const pieceEmojis = {
+                'r': '♜', 'n': '♞', 'b': '♝', 'q': '♛', 'k': '♚', 'p': '♟',
+                'R': '♖', 'N': '♘', 'B': '♗', 'Q': '♕', 'K': '♔', 'P': '♙'
+            };
+            
+            // Colores de las piezas
+            const pieceColors = {
+                'r': 'black', 'n': 'black', 'b': 'black', 'q': 'black', 'k': 'black', 'p': 'black',
+                'R': 'white', 'N': 'white', 'B': 'white', 'Q': 'white', 'K': 'white', 'P': 'white'
+            };
+            
+            // Crear el tablero
+            function createBoard() {
+                board.innerHTML = '';
+                
+                for (let row = 0; row < 8; row++) {
+                    for (let col = 0; col < 8; col++) {
+                        const square = document.createElement('div');
+                        const displayRow = boardFlipped ? 7 - row : row;
+                        const displayCol = boardFlipped ? 7 - col : col;
+                        
+                        square.className = `chess-square ${(row + col) % 2 === 0 ? 'light' : 'dark'}`;
+                        square.dataset.row = row;
+                        square.dataset.col = col;
+                        
+                        // Añadir coordenadas
+                        if ((boardFlipped && row === 7) || (!boardFlipped && row === 0)) {
+                            const file = document.createElement('div');
+                            file.className = 'coordinate file';
+                            file.textContent = String.fromCharCode(97 + displayCol);
+                            square.appendChild(file);
+                        }
+                        
+                        if ((boardFlipped && col === 0) || (!boardFlipped && col === 7)) {
+                            const rank = document.createElement('div');
+                            rank.className = 'coordinate rank';
+                            rank.textContent = 8 - displayRow;
+                            square.appendChild(rank);
+                        }
+                        
+                        const piece = boardState[row][col];
+                        if (piece) {
+                            const pieceElement = document.createElement('span');
+                            pieceElement.textContent = pieceEmojis[piece];
+                            pieceElement.style.color = pieceColors[piece];
+                            square.appendChild(pieceElement);
+                        }
+                        
+                        square.addEventListener('click', () => handleSquareClick(row, col));
+                        board.appendChild(square);
+                    }
+                }
+                
+                // Verificar jaque
+                checkForCheck();
+                
+                // Actualizar mensaje de estado
+                updateStatusMessage();
+            }
+            
+            // Actualizar mensaje de estado
+            function updateStatusMessage() {
+                const player = currentPlayer === 'white' ? 'blancas' : 'negras';
+                statusMessage.textContent = `Turno de las ${player}`;
+            }
+            
+            // Manejar clic en una casilla
+            function handleSquareClick(row, col) {
+                const piece = boardState[row][col];
+                
+                // Si hay una promoción pendiente, ignorar otros clics
+                if (promotionPending) return;
+                
+                // Si hay una pieza seleccionada, intentar moverla
+                if (selectedPiece) {
+                    const [fromRow, fromCol] = selectedPiece;
+                    const fromPiece = boardState[fromRow][fromCol];
+                    
+                    // Verificar si es un movimiento válido
+                    if (isValidMove(fromRow, fromCol, row, col)) {
+                        // Realizar el movimiento
+                        makeMove(fromRow, fromCol, row, col, fromPiece);
+                        
+                        // Cambiar de jugador
+                        currentPlayer = currentPlayer === 'white' ? 'black' : 'white';
+                        if (currentPlayer === 'white') fullMoveNumber++;
+                        
+                        // Deseleccionar la pieza
+                        selectedPiece = null;
+                        clearHighlights();
+                        createBoard();
+                    } else {
+                        // Si el clic es en otra pieza del mismo jugador, seleccionarla
+                        if (piece && pieceColors[piece] === currentPlayer) {
+                            selectedPiece = [row, col];
+                            highlightPossibleMoves(row, col);
+                        } else {
+                            // Deseleccionar la pieza
+                            selectedPiece = null;
+                            clearHighlights();
+                        }
+                    }
+                    return;
+                }
+                
+                // Si no hay pieza seleccionada y se hace clic en una pieza del jugador actual
+                if (piece && pieceColors[piece] === currentPlayer) {
+                    selectedPiece = [row, col];
+                    highlightPossibleMoves(row, col);
+                }
+            }
+            
+            // Verificar si un movimiento es válido
+            function isValidMove(fromRow, fromCol, toRow, toCol) {
+                const piece = boardState[fromRow][fromCol];
+                if (!piece) return false;
+                
+                const targetPiece = boardState[toRow][toCol];
+                
+                // Verificar que no se capture una pieza del mismo color
+                if (targetPiece && pieceColors[targetPiece] === pieceColors[piece]) {
+                    return false;
+                }
+                
+                const deltaRow = toRow - fromRow;
+                const deltaCol = toCol - fromCol;
+                const direction = pieceColors[piece] === 'white' ? -1 : 1;
+                
+                switch (piece.toLowerCase()) {
+                    case 'p': // Peón
+                        // Movimiento hacia adelante
+                        if (deltaCol === 0 && !targetPiece) {
+                            // Movimiento simple
+                            if (deltaRow === direction) return true;
+                            // Doble paso inicial
+                            const startRow = piece === 'P' ? 6 : 1;
+                            if (fromRow === startRow && deltaRow === 2 * direction && 
+                                !boardState[fromRow + direction][fromCol] && !targetPiece) {
+                                return true;
+                            }
+                        }
+                        // Capturas
+                        if (Math.abs(deltaCol) === 1 && deltaRow === direction) {
+                            // Captura normal
+                            if (targetPiece) return true;
+                            // Captura al paso
+                            if (enPassantTarget && toRow === enPassantTarget.row && toCol === enPassantTarget.col) {
+                                return true;
+                            }
+                        }
+                        break;
+                        
+                    case 'n': // Caballo
+                        return (Math.abs(deltaRow) === 2 && Math.abs(deltaCol) === 1) || 
+                               (Math.abs(deltaRow) === 1 && Math.abs(deltaCol) === 2);
+                        
+                    case 'b': // Alfil
+                        if (Math.abs(deltaRow) !== Math.abs(deltaCol)) return false;
+                        return isPathClear(fromRow, fromCol, toRow, toCol);
+                        
+                    case 'r': // Torre
+                        if (deltaRow !== 0 && deltaCol !== 0) return false;
+                        return isPathClear(fromRow, fromCol, toRow, toCol);
+                        
+                    case 'q': // Reina
+                        if (deltaRow !== 0 && deltaCol !== 0 && Math.abs(deltaRow) !== Math.abs(deltaCol)) return false;
+                        return isPathClear(fromRow, fromCol, toRow, toCol);
+                        
+                    case 'k': // Rey
+                        // Movimiento normal
+                        if (Math.abs(deltaRow) <= 1 && Math.abs(deltaCol) <= 1) return true;
+                        // Enroque
+                        if (deltaRow === 0 && Math.abs(deltaCol) === 2) {
+                            return canCastle(fromRow, fromCol, toCol);
+                        }
+                        break;
+                }
+                
+                return false;
+            }
+            
+            // Verificar si el camino entre dos casillas está despejado
+            function isPathClear(fromRow, fromCol, toRow, toCol) {
+                const deltaRow = Math.sign(toRow - fromRow);
+                const deltaCol = Math.sign(toCol - fromCol);
+                let row = fromRow + deltaRow;
+                let col = fromCol + deltaCol;
+                
+                while (row !== toRow || col !== toCol) {
+                    if (boardState[row][col]) return false;
+                    row += deltaRow;
+                    col += deltaCol;
+                }
+                
+                return true;
+            }
+            
+            // Verificar si el enroque es posible
+            function canCastle(row, col, toCol) {
+                const color = pieceColors[boardState[row][col]];
+                const kingside = toCol > col;
+                
+                // Verificar derechos de enroque
+                if (!castlingRights[color][kingside ? 'kingside' : 'queenside']) {
+                    return false;
+                }
+                
+                // Verificar que no hay piezas en el camino
+                const rookCol = kingside ? 7 : 0;
+                const step = kingside ? 1 : -1;
+                
+                for (let c = col + step; c !== rookCol; c += step) {
+                    if (boardState[row][c]) return false;
+                }
+                
+                // Verificar que el rey no está en jaque ni pasa por casillas amenazadas
+                if (isInCheck(color)) return false;
+                
+                for (let c = col + step; c !== col + 2 * step; c += step) {
+                    if (isSquareAttacked(row, c, color)) return false;
+                }
+                
+                return true;
+            }
+            
+            // Realizar un movimiento
+            function makeMove(fromRow, fromCol, toRow, toCol, piece) {
+                // Guardar información para captura al paso
+                enPassantTarget = null;
+                
+                // Movimientos especiales
+                if (piece.toLowerCase() === 'p') {
+                    // Captura al paso
+                    if (Math.abs(toCol - fromCol) === 1 && !boardState[toRow][toCol]) {
+                        boardState[fromRow][toCol] = '';
+                    }
+                    // Doble paso - marcar para captura al paso
+                    if (Math.abs(toRow - fromRow) === 2) {
+                        enPassantTarget = { row: fromRow + (toRow - fromRow) / 2, col: fromCol };
+                    }
+                    // Promoción
+                    if ((piece === 'P' && toRow === 0) || (piece === 'p' && toRow === 7)) {
+                        promotionPending = { row: toRow, col: toCol, color: pieceColors[piece] };
+                        showPromotionModal();
+                    }
+                }
+                
+                // Enroque
+                if (piece.toLowerCase() === 'k' && Math.abs(toCol - fromCol) === 2) {
+                    const rookCol = toCol > fromCol ? 7 : 0;
+                    const newRookCol = toCol > fromCol ? toCol - 1 : toCol + 1;
+                    boardState[toRow][newRookCol] = boardState[toRow][rookCol];
+                    boardState[toRow][rookCol] = '';
+                }
+                
+                // Actualizar derechos de enroque
+                if (piece.toLowerCase() === 'k') {
+                    castlingRights[pieceColors[piece]] = { kingside: false, queenside: false };
+                }
+                if (piece.toLowerCase() === 'r') {
+                    if (fromCol === 0) castlingRights[pieceColors[piece]].queenside = false;
+                    if (fromCol === 7) castlingRights[pieceColors[piece]].kingside = false;
+                }
+                
+                // Mover la pieza
+                boardState[toRow][toCol] = piece;
+                boardState[fromRow][fromCol] = '';
+                
+                // Actualizar contador de movimientos
+                if (piece.toLowerCase() === 'p' || targetPiece) {
+                    halfMoveClock = 0;
+                } else {
+                    halfMoveClock++;
+                }
+            }
+            
+            // Mostrar modal de promoción
+            function showPromotionModal() {
+                promotionModal.style.display = 'flex';
+                
+                promotionOptions.forEach(option => {
+                    option.style.color = promotionPending.color === 'white' ? 'white' : 'black';
+                });
+            }
+            
+            // Ocultar modal de promoción
+            function hidePromotionModal() {
+                promotionModal.style.display = 'none';
+                promotionPending = null;
+            }
+            
+            // Manejar selección de promoción
+            promotionOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const piece = promotionPending.color === 'white' 
+                        ? this.dataset.piece.toUpperCase() 
+                        : this.dataset.piece;
+                    
+                    boardState[promotionPending.row][promotionPending.col] = piece;
+                    hidePromotionModal();
+                    createBoard();
+                });
+            });
+            
+            // Verificar si el rey está en jaque
+            function isInCheck(color) {
+                const kingPos = findKing(color);
+                return isSquareAttacked(kingPos.row, kingPos.col, color);
+            }
+            
+            // Verificar jaque mate
+            function checkForCheckmate(color) {
+                if (!isInCheck(color)) return false;
+                
+                // Verificar si hay algún movimiento legal
+                for (let row = 0; row < 8; row++) {
+                    for (let col = 0; col < 8; col++) {
+                        const piece = boardState[row][col];
+                        if (piece && pieceColors[piece] === color) {
+                            const moves = getPossibleMoves(row, col);
+                            if (moves.length > 0) return false;
+                        }
+                    }
+                }
+                
+                return true;
+            }
+            
+            // Verificar tablas (ahogado)
+            function checkForStalemate(color) {
+                if (isInCheck(color)) return false;
+                
+                // Verificar si hay algún movimiento legal
+                for (let row = 0; row < 8; row++) {
+                    for (let col = 0; col < 8; col++) {
+                        const piece = boardState[row][col];
+                        if (piece && pieceColors[piece] === color) {
+                            const moves = getPossibleMoves(row, col);
+                            if (moves.length > 0) return false;
+                        }
+                    }
+                }
+                
+                return true;
+            }
+            
+            // Verificar jaque y actualizar clases
+            function checkForCheck() {
+                // Limpiar clases de jaque
+                document.querySelectorAll('.chess-square').forEach(square => {
+                    square.classList.remove('check');
+                });
+                
+                const whiteKingPos = findKing('white');
+                const blackKingPos = findKing('black');
+                
+                if (isSquareAttacked(whiteKingPos.row, whiteKingPos.col, 'white')) {
+                    const squares = document.querySelectorAll('.chess-square');
+                    squares.forEach(square => {
+                        if (parseInt(square.dataset.row) === whiteKingPos.row && 
+                            parseInt(square.dataset.col) === whiteKingPos.col) {
+                            square.classList.add('check');
+                        }
+                    });
+                }
+                
+                if (isSquareAttacked(blackKingPos.row, blackKingPos.col, 'black')) {
+                    const squares = document.querySelectorAll('.chess-square');
+                    squares.forEach(square => {
+                        if (parseInt(square.dataset.row) === blackKingPos.row && 
+                            parseInt(square.dataset.col) === blackKingPos.col) {
+                            square.classList.add('check');
+                        }
+                    });
+                }
+            }
+            
+            // Encontrar la posición del rey
+            function findKing(color) {
+                const king = color === 'white' ? 'K' : 'k';
+                for (let row = 0; row < 8; row++) {
+                    for (let col = 0; col < 8; col++) {
+                        if (boardState[row][col] === king) {
+                            return { row, col };
+                        }
+                    }
+                }
+                return null;
+            }
+            
+            // Verificar si una casilla está bajo ataque
+            function isSquareAttacked(row, col, defenderColor) {
+                for (let r = 0; r < 8; r++) {
+                    for (let c = 0; c < 8; c++) {
+                        const piece = boardState[r][c];
+                        if (piece && pieceColors[piece] !== defenderColor) {
+                            if (isValidMove(r, c, row, col)) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
+            
+            // Obtener todos los movimientos posibles para una pieza
+            function getPossibleMoves(row, col) {
+                const moves = [];
+                const piece = boardState[row][col];
+                if (!piece) return moves;
+                
+                for (let r = 0; r < 8; r++) {
+                    for (let c = 0; c < 8; c++) {
+                        if (isValidMove(row, col, r, c)) {
+                            // Verificar que el movimiento no deja al rey en jaque
+                            const originalPiece = boardState[r][c];
+                            boardState[r][c] = piece;
+                            boardState[row][col] = '';
+                            
+                            const kingPos = findKing(pieceColors[piece]);
+                            if (!isSquareAttacked(kingPos.row, kingPos.col, pieceColors[piece])) {
+                                moves.push({ row: r, col: c });
+                            }
+                            
+                            // Revertir el movimiento simulado
+                            boardState[row][col] = piece;
+                            boardState[r][c] = originalPiece;
+                        }
+                    }
+                }
+                
+                return moves;
+            }
+            
+            // Resaltar movimientos posibles
+            function highlightPossibleMoves(row, col) {
+                clearHighlights();
+                
+                const piece = boardState[row][col];
+                if (!piece) return;
+                
+                // Resaltar la pieza seleccionada
+                const squares = document.querySelectorAll('.chess-square');
+                squares.forEach(square => {
+                    if (parseInt(square.dataset.row) === row && parseInt(square.dataset.col) === col) {
+                        square.classList.add('selected');
+                    }
+                });
+                
+                // Resaltar movimientos posibles
+                const moves = getPossibleMoves(row, col);
+                moves.forEach(move => {
+                    squares.forEach(square => {
+                        if (parseInt(square.dataset.row) === move.row && parseInt(square.dataset.col) === move.col) {
+                            if (boardState[move.row][move.col]) {
+                                square.classList.add('possible-capture');
+                            } else {
+                                square.classList.add('possible-move');
+                            }
+                        }
+                    });
+                });
+            }
+            
+            function highlightSquare(row, col, isCapture) {
+                const squares = document.querySelectorAll('.chess-square');
+                squares.forEach(square => {
+                    if (parseInt(square.dataset.row) === row && parseInt(square.dataset.col) === col) {
+                        square.classList.add(isCapture ? 'possible-capture' : 'possible-move');
+                    }
+                });
+            }
+            
+            function clearHighlights() {
+                document.querySelectorAll('.selected, .possible-move, .possible-capture').forEach(el => {
+                    el.classList.remove('selected', 'possible-move', 'possible-capture');
+                });
+            }
+            
+            // Reiniciar el juego
+            resetBtn.addEventListener('click', function() {
+                boardState = JSON.parse(JSON.stringify(initialPosition));
+                currentPlayer = 'white';
+                selectedPiece = null;
+                enPassantTarget = null;
+                castlingRights = { white: { kingside: true, queenside: true }, black: { kingside: true, queenside: true } };
+                halfMoveClock = 0;
+                fullMoveNumber = 1;
+                promotionPending = null;
+                clearHighlights();
+                createBoard();
+            });
+            
+            // Voltear el tablero
+            flipBtn.addEventListener('click', function() {
+                boardFlipped = !boardFlipped;
+                createBoard();
+            });
+            
+            // Inicializar el tablero
+            createBoard();
+        });
+    </script>
+</body>
+</html>
